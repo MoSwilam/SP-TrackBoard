@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import TodoStage from '../app/components/todo.stage.vue';
-import DoneStage from '../app/components/done.stage.vue';
-import InProgressStage from '../app/components/inprogress.stage.vue';
-import ArchivedStage from '../app/components/archived.stage.vue';
-
-const onEditCard = (card?: any) => {
-  
-};
-
-const onDeleteCard = (card?: any) => {
-  
-};
-
-</script>
 
 <template>
   <dev class="wrapper">
@@ -42,6 +27,32 @@ const onDeleteCard = (card?: any) => {
     </div>
   </dev>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import TodoStage from '../app/components/todo.stage.vue';
+import DoneStage from '../app/components/done.stage.vue';
+import InProgressStage from '../app/components/inprogress.stage.vue';
+import ArchivedStage from '../app/components/archived.stage.vue';
+import apiClient from '../app/api-client/client';
+
+const data = ref(null);
+
+const onEditCard = async (card: any) => {
+  try {
+    console.log('Edit card', card);
+    const response = await apiClient.get(`/cases`);
+    data.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const onDeleteCard = (card?: any) => {
+  
+};
+
+</script>
 
 
 <style scoped lang="scss">

@@ -8,6 +8,7 @@
     "sourceRoot": "apps/frontend/src"
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "vue-tailwind": "^2.5.1"
   }
 }
