@@ -7,14 +7,14 @@ defineProps<{
 <template>
   <div class="wrapper">
     <div class="container">
-      <div id="welcome">
+      <!-- <div id="welcome">
         <h1>
           <span> Hello there, </span>
           Welcome {{ title }} 👋
         </h1>
-      </div>
+      </div> -->
 
-      <div id="hero" class="rounded">
+      <!-- <div id="hero" class="rounded">
         <div class="text-container">
           <h2>
             <svg
@@ -46,7 +46,7 @@ defineProps<{
             />
           </svg>
         </div>
-      </div>
+      </div> -->
 
       <div id="middle-content">
         <div id="middle-left-content">
@@ -199,7 +199,7 @@ defineProps<{
               </svg>
             </a>
           </div>
-          <a
+          <!-- <a
             id="nx-repo"
             class="button-pill rounded shadow"
             href="https://github.com/nrwl/nx?utm_source=nx-project"
@@ -220,7 +220,7 @@ defineProps<{
               Nx is open source
               <span> Love Nx? Give us a star! </span>
             </span>
-          </a>
+          </a> -->
         </div>
         <div id="other-links">
           <a
@@ -246,7 +246,7 @@ defineProps<{
               <span>The official VSCode extension for Nx.</span>
             </span>
           </a>
-          <a
+          <!-- <a
             id="nx-console-jetbrains"
             class="button-pill rounded shadow"
             href="https://plugins.jetbrains.com/plugin/21060-nx-console"
@@ -293,7 +293,7 @@ defineProps<{
                 Available for WebStorm, Intellij IDEA Ultimate and more!
               </span>
             </span>
-          </a>
+          </a> -->
           <div id="nx-cloud" class="rounded shadow">
             <div>
               <svg
@@ -334,7 +334,7 @@ defineProps<{
         </div>
       </div>
 
-      <div id="commands" class="rounded shadow">
+      <!-- <div id="commands" class="rounded shadow">
         <h2>Next steps</h2>
         <p>Here are some things you can do with Nx:</p>
         <details>
@@ -417,9 +417,9 @@ defineProps<{
 <span># Add a component</span>nx g @nx/vue:component ui/src/lib/button
 </pre>
         </details>
-      </div>
+      </div> -->
 
-      <p id="love">
+      <!-- <p id="love">
         Carefully crafted with
         <svg
           fill="currentColor"
@@ -434,7 +434,7 @@ defineProps<{
             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
           />
         </svg>
-      </p>
+      </p> -->
     </div>
   </div>
 </template>
@@ -554,6 +554,7 @@ pre {
   gap: 2rem;
 }
 #learning-materials {
+
   padding: 2.5rem 2rem;
 }
 #learning-materials h2 {

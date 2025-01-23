@@ -6,5 +6,8 @@
     "name": "frontend",
     "projectType": "application",
     "sourceRoot": "apps/frontend/src"
+  },
+  "dependencies": {
+    "vue-tailwind": "^2.5.1"
   }
 }

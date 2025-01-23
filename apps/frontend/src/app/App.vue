@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+// import { RouterLink, RouterView } from 'vue-router';
+import BoardView from '../views/BoardView.vue';
 </script>
 
 <template>
-  <header>
+  <!-- <header>
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/board">Board</RouterLink>
     </nav>
-  </header>
-  <RouterView />
+  </header> -->
+  <BoardView />
+  <!-- <RouterView /> -->
 </template>
 
 <style scoped lang="scss">
