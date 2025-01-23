@@ -3,6 +3,15 @@ import TodoStage from '../app/components/todo.stage.vue';
 import DoneStage from '../app/components/done.stage.vue';
 import InProgressStage from '../app/components/inprogress.stage.vue';
 import ArchivedStage from '../app/components/archived.stage.vue';
+
+const onEditCard = (card?: any) => {
+  
+};
+
+const onDeleteCard = (card?: any) => {
+  
+};
+
 </script>
 
 <template>
@@ -12,8 +21,14 @@ import ArchivedStage from '../app/components/archived.stage.vue';
     </h1>
     <div class="container">
       <TodoStage
-        class="stage"
-        title="To Do"
+        title="Todo1"
+        :cards="[
+          { id: '1', title: 'Task 1', status: 'todo', updated: '2021-10-01' },
+          { id: '2', title: 'Task 2', status: 'todo', updated: '2021-10-02' },
+          { id: '3', title: 'Task 3', status: 'todo', updated: '2021-10-03' }
+        ]"
+        @edit="onEditCard"
+        @delete="onDeleteCard"
       />
       <InProgressStage
         class="stage"
@@ -28,7 +43,6 @@ import ArchivedStage from '../app/components/archived.stage.vue';
   </dev>
 </template>
 
-<script></script>
 
 <style scoped lang="scss">
 
@@ -59,16 +73,7 @@ import ArchivedStage from '../app/components/archived.stage.vue';
   align-self: flex-start;
 }
 
-.stage {
-  background-color: #f9f9f9;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-  padding: 1rem;
-  flex: 1;
-  width: 100%;
-  min-width: 200px;
-}
+
 
 @media (max-width: 1000px) {
   .container {
