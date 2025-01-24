@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>In progress</h1>
+    <h1 class="stage-title">In progress</h1>
   </div>
 </template>
 

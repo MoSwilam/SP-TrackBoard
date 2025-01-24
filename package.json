@@ -2,10 +2,12 @@
   "name": "@sinpex-board/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:all": "nx run-many --target=serve --projects=backend,frontend"
+  },
   "private": true,
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
+    "@eslint/js": "^8.0.0",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nx/eslint": "20.3.2",
@@ -28,7 +30,7 @@
     "@vue/eslint-config-prettier": "7.1.0",
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/test-utils": "^2.4.1",
-    "eslint": "^9.8.0",
+    "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-vue": "^9.16.1",
     "jest": "^29.7.0",

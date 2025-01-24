@@ -41,7 +41,7 @@ const data = ref(null);
 const onEditCard = async (card: any) => {
   try {
     console.log('Edit card', card);
-    const response = await apiClient.get(`/cases`);
+    const response = await apiClient.post(`/cases`, { title: 'Card title yooooo' });
     data.value = response.data;
   } catch (error) {
     console.error(error);

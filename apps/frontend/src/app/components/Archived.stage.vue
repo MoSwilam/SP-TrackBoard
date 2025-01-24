@@ -1,6 +1,8 @@
 <template>
   <div class="stage">
-    <h1>Archived</h1>
+    <header class="stage-header">
+      <h1 class="stage-title">Archived</h1>
+    </header>
   </div>
 </template>
 

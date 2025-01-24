@@ -1,4 +1,13 @@
 {
+  "dependencies": {
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/mapped-types": "*",
+    "@nestjs/typeorm": "^11.0.0",
+    "eslint": "^9.0.0",
+    "pg": "^8.13.1",
+    "postgres": "^3.4.5",
+    "typeorm": "^0.3.20"
+  },
   "name": "@sinpex-board/backend",
   "version": "0.0.1",
   "private": true,
