@@ -6,7 +6,33 @@
   </div>
 </template>
 
-<script></script>
+<script setup lang="ts">
+type ICard = {
+  id: number;
+  title: string;
+  status: string;
+  updated: string;
+};
+
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  cases: {
+    type: Array as () => ICard[],
+    required: true,
+  },
+});
+</script>
 
 <style scoped lang="scss">
 .stage {

@@ -1,23 +1,45 @@
 <template>
-  <div class="card">
+  <div
+    class="card"
+    draggable="true"
+    @dragstart="onDragStart"
+  >
     <div class="card-header">
       <h2>{{ title }}</h2>
-      <span class="card-status" :class="statusClass"> {{ status }}</span>
+      <span
+        class="card-status"
+      > {{ status }}</span>
     </div>
     <div class="card-body">
-      <p class="card-updated">Updated {{ updated }}</p>
+      <p class="card-updated">
+        Updated {{ updated }}
+      </p>
     </div>
     <div class="card-actions">
-      <button class="card-action" @click="onEdit">Edit</button>
-      <button class="card-action" @click="onDelete">Delete</button>
+      <button
+        class="card-action"
+        @click="onEdit"
+      >
+        Edit
+      </button>
+      <button
+        class="card-action"
+        @click="onDelete"
+      >
+        Delete
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { onMounted } from 'vue';
 
 const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -32,19 +54,21 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['edit', 'delete']);
-
-const onEdit = () => {
-  emit('edit');
-};
-
-const onDelete = () => {
-  emit('delete');
-};
-
-const statusClass = computed(() => {
-  return `status-${props.status.toLowerCase().replace(' ', '-')}`;
+// Log props when the component mounts
+onMounted(() => {
+  console.log('Card props:', props);
 });
+
+const emit = defineEmits(['drag-start']);
+
+
+const onDragStart = (event: any) => {
+  event.dataTransfer.dropEffect = 'move';
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('caseId', props.id);
+  emit('drag-start', props.id, props.id);
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -57,6 +81,7 @@ const statusClass = computed(() => {
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
   }
 }
 

@@ -1,12 +1,17 @@
 <template>
   <div class="stage">
-    <h1 class="stage-title">Todo</h1>
-    <div class="stage-cards">
+    <h1 class="stage-title">
+      Todo
+    </h1>
+    <div
+      class="stage-cards" 
+    >
       <Card
-        v-for="card in cards"
+        v-for="card in cases"
+        :id="card.id"
         :key="card.id"
         :title="card.title"
-        :status="card.status"
+        :status="card.status" 
         :updated="card.updated"
         @edit="onEditCard"
         @delete="onDeleteCard"
@@ -17,21 +22,31 @@
 
 <script setup lang="ts">
 import Card from './Card.vue';
+import { watch, onUpdated, onMounted } from 'vue';
 
 type ICard = {
-  id: string;
+  id: number;
   title: string;
   status: string;
   updated: string;
 };
 
-defineProps({
+
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
   },
-  cards: {
-    type: Array<ICard>,
+  status: {
+    type: String,
+    required: true,
+  },
+  cases: {
+    type: Array as () => ICard[],
     required: true,
   },
 });
@@ -45,6 +60,10 @@ const onEditCard = (card: any) => {
 const onDeleteCard = (card: any) => {
   emit('delete', card);
 };
+
+// onMounted(() => {
+//   console.log('Todo props:', props);
+// });
 </script>
 
 <style scoped lang="scss">
