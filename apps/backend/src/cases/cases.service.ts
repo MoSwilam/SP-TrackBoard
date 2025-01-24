@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 export class CasesService {
   constructor(
     @InjectRepository(Case)
-    private readonly casesRepo: Repository<Case>,
+    private readonly casesRepo: Repository<Case>
   ) {}
 
   async create(createCaseDto: CreateCaseDto) {

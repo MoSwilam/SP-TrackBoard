@@ -2,29 +2,14 @@
   <div class="card">
     <div class="card-header">
       <h2>{{ title }}</h2>
-      <span
-        class="card-status"
-        :class="statusClass"
-      > {{ status }}</span>
+      <span class="card-status" :class="statusClass"> {{ status }}</span>
     </div>
     <div class="card-body">
-      <p class="card-updated">
-        Updated {{ updated }}
-      </p>
+      <p class="card-updated">Updated {{ updated }}</p>
     </div>
     <div class="card-actions">
-      <button
-        class="card-action"
-        @click="onEdit"
-      >
-        Edit
-      </button>
-      <button
-        class="card-action"
-        @click="onDelete"
-      >
-        Delete
-      </button>
+      <button class="card-action" @click="onEdit">Edit</button>
+      <button class="card-action" @click="onDelete">Delete</button>
     </div>
   </div>
 </template>
@@ -35,16 +20,16 @@ import { computed } from 'vue';
 const props = defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
-    required: true
+    required: true,
   },
   updated: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const emit = defineEmits(['edit', 'delete']);

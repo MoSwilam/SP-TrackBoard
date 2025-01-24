@@ -1,8 +1,6 @@
 <template>
   <div class="stage">
-    <h1 class="stage-title">
-      Done
-    </h1>
+    <h1 class="stage-title">Done</h1>
   </div>
 </template>
 

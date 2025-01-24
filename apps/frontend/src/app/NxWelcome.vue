@@ -554,7 +554,6 @@ pre {
   gap: 2rem;
 }
 #learning-materials {
-
   padding: 2.5rem 2rem;
 }
 #learning-materials h2 {

@@ -1,8 +1,6 @@
 <template>
   <div class="stage">
-    <h1 class="stage-title">
-      Todo
-    </h1>
+    <h1 class="stage-title">Todo</h1>
     <div class="stage-cards">
       <Card
         v-for="card in cards"
@@ -17,25 +15,25 @@
   </div>
 </template>
 
-<script setup lang="ts"> 
+<script setup lang="ts">
 import Card from './Card.vue';
 
 type ICard = {
-  id: string
+  id: string;
   title: string;
-  status: string
+  status: string;
   updated: string;
 };
 
 defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   cards: {
     type: Array<ICard>,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const emit = defineEmits(['edit', 'delete']);
@@ -47,7 +45,6 @@ const onEditCard = (card: any) => {
 const onDeleteCard = (card: any) => {
   emit('delete', card);
 };
-
 </script>
 
 <style scoped lang="scss">

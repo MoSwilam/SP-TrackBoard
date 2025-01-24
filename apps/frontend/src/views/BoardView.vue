@@ -1,28 +1,19 @@
-
 <template>
   <dev class="wrapper">
-    <h1 class="title">
-      Board
-    </h1>
+    <h1 class="title">Board</h1>
     <div class="container">
       <TodoStage
         title="Todo1"
         :cards="[
           { id: '1', title: 'Task 1', status: 'todo', updated: '2021-10-01' },
           { id: '2', title: 'Task 2', status: 'todo', updated: '2021-10-02' },
-          { id: '3', title: 'Task 3', status: 'todo', updated: '2021-10-03' }
+          { id: '3', title: 'Task 3', status: 'todo', updated: '2021-10-03' },
         ]"
         @edit="onEditCard"
         @delete="onDeleteCard"
       />
-      <InProgressStage
-        class="stage"
-        title="In Progress"
-      />
-      <DoneStage
-        class="stage"
-        title="Done"
-      />
+      <InProgressStage class="stage" title="In Progress" />
+      <DoneStage class="stage" title="Done" />
       <ArchivedStage title="Archived" />
     </div>
   </dev>
@@ -41,22 +32,19 @@ const data = ref(null);
 const onEditCard = async (card: any) => {
   try {
     console.log('Edit card', card);
-    const response = await apiClient.post(`/cases`, { title: 'Card title yooooo' });
+    const response = await apiClient.post(`/cases`, {
+      title: 'Card title yooooo',
+    });
     data.value = response.data;
   } catch (error) {
     console.error(error);
   }
 };
 
-const onDeleteCard = (card?: any) => {
-  
-};
-
+const onDeleteCard = (card?: any) => {};
 </script>
 
-
 <style scoped lang="scss">
-
 .wrapper {
   // border: 4px solid #494949;
   min-height: 800px;
@@ -83,8 +71,6 @@ const onDeleteCard = (card?: any) => {
   color: #535457;
   align-self: flex-start;
 }
-
-
 
 @media (max-width: 1000px) {
   .container {

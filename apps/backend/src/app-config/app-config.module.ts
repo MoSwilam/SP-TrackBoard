@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { Case } from '../cases/case.entity';
 
 @Module({
@@ -13,7 +12,6 @@ import { Case } from '../cases/case.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-
         console.log('ENTITIES', [__dirname + '/**/*.entity{.ts,.js}']);
 
         return {
@@ -25,10 +23,10 @@ import { Case } from '../cases/case.entity';
           database: configService.get('DB_DATABASE'),
           entities: [Case],
           synchronize: true,
-        }
+        };
       },
       inject: [ConfigService],
-    })
+    }),
   ],
   providers: [],
 })
