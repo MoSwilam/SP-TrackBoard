@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCaseDto } from './dto/create-case.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Case } from './case.entity';
@@ -14,23 +14,27 @@ export class CasesService {
   async create(createCaseDto: CreateCaseDto) {
     const newCase = this.casesRepo.create(createCaseDto);
     const saved = await this.casesRepo.save(newCase);
-    console.log('saved', saved);
     return saved;
   }
 
-  findAll() {
-    return `This action returns all cases`;
+  async findAll() {
+    return await this.casesRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} case`;
+  async findOne(id: number) {
+    const item = await this.casesRepo.findOne({ where: { id } });
+    if (!item) {
+      throw new NotFoundException('Case not found');
+    }
+    return item;
   }
 
-  update(id: number, updateCaseDto: any) {
-    return `This action updates a #${id} case`;
+  async update(id: number, updateCaseDto: any) {
+    await this.findOne(id);
+    return await this.casesRepo.update(id, updateCaseDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} case`;
+    return this.casesRepo.delete(id);
   }
 }

@@ -12,8 +12,6 @@ import { Case } from '../cases/case.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        console.log('ENTITIES', [__dirname + '/**/*.entity{.ts,.js}']);
-
         return {
           type: 'postgres',
           host: configService.get('DB_HOST'),

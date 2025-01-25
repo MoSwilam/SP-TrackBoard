@@ -1,20 +1,16 @@
 <template>
   <div class="stage">
-    <h1 class="stage-title">
-      Todo
-    </h1>
-    <div
-      class="stage-cards" 
-    >
+    <h1 class="stage-title">Todo</h1>
+    <div class="stage-cards">
       <Card
         v-for="card in cases"
         :id="card.id"
         :key="card.id"
         :title="card.title"
-        :status="card.status" 
+        :status="card.status"
         :updated="card.updated"
-        @edit="onEditCard"
-        @delete="onDeleteCard"
+        @edit="handleEdit"
+        @delete="handleDelete"
       />
     </div>
   </div>
@@ -30,7 +26,6 @@ type ICard = {
   status: string;
   updated: string;
 };
-
 
 const props = defineProps({
   id: {
@@ -53,11 +48,13 @@ const props = defineProps({
 
 const emit = defineEmits(['edit', 'delete']);
 
-const onEditCard = (card: any) => {
+const handleEdit = (card: any) => {
+  console.log('Edit card:', card);
   emit('edit', card);
 };
 
-const onDeleteCard = (card: any) => {
+const handleDelete = (card: any) => {
+  console.log('Edit card:', card);
   emit('delete', card);
 };
 

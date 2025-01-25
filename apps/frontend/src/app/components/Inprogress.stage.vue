@@ -1,13 +1,6 @@
 <template>
-  <div 
-    class="stage"
-    @drop="handleDrop"
-    @dragenter.prevent
-    @dragover.prevent
-  >
-    <h1 class="stage-title">
-      In Progress
-    </h1>
+  <div class="stage" @drop="handleDrop" @dragenter.prevent @dragover.prevent>
+    <h1 class="stage-title">In Progress</h1>
     <div class="stage-cards">
       <Card
         v-for="card in cases"
@@ -16,8 +9,8 @@
         :title="card.title"
         :status="card.status"
         :updated="card.updated"
-        @edit="onEditCard"
-        @delete="onDeleteCard"
+        @edit="handleEdit"
+        @delete="handleDelete"
       />
     </div>
   </div>
@@ -53,13 +46,23 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['drop']);
+const emit = defineEmits(['drop', 'edit', 'delete']);
 
 const handleDrop = (event: DragEvent) => {
   const cardId = event.dataTransfer?.getData('caseId'); // Get the card ID
   if (cardId) {
     emit('drop', +cardId, props.status); // Emit the drop event with card ID and target stage
   }
+};
+
+const handleEdit = (card: any) => {
+  console.log('Edit card:', card);
+  emit('edit', card);
+};
+
+const handleDelete = (card: any) => {
+  console.log('Edit card:', card);
+  emit('delete', card);
 };
 </script>
 

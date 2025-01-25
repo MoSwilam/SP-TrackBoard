@@ -1,110 +1,150 @@
-# SinpexBoard
+# Project Tech Stack and Setup
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+## Frontend
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+- **Framework**: Vue.js
+- **Language**: TypeScript
+- **State Management**: Vue `ref` for reactive state
+- **Drag-and-Drop**: Native HTML5 Drag-and-Drop API
+- **Styling**: SCSS
+- **Development Tools**: Vite
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Backend
 
-## Generate a library
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **ORM**: TypeORM
+- **Database**: PostgreSQL
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
-```
+## Monorepo Management
 
-## Run tasks
+- **Tool**: Nx
+  - **Dependency Graph**: Visualizes and manages dependencies between projects.
+  - **Code Generation**: Automates boilerplate code for new components, services, or modules.
+  - **Caching**: Speeds up builds and tests by caching results.
+  - **Task Orchestration**: Runs tasks (e.g., build, test, lint) across multiple projects efficiently.
 
-To build the library use:
+## Monorepo Structure
 
-```sh
-npx nx build pkg1
-```
+my-monorepo/
+├── apps/
+│ ├── frontend/ # Vue.js frontend application
+│ │ ├── src/
+│ │ │ ├── components/
+│ │ │ ├── views/
+│ │ │ ├── App.vue
+│ │ │ └── main.ts
+│ │ └── vite.config.ts
+│ └── backend/ # NestJS backend application
+│ ├── src/
+│ │ ├── modules/
+│ │ ├── entities/
+│ │ ├── services/
+│ │ ├── controllers/
+│ │ └── main.ts
+│ └── ormconfig.json # TypeORM configuration
+├── libs/
+│ └── shared/ # Shared libraries (e.g., types, utilities)
+│ ├── src/
+│ │ ├── interfaces/
+│ │ └── utils/
+│ └── tsconfig.json
+├── nx.json # Nx configuration
+├── package.json # Root package.json
+├── eslint.config.cjs # Root Eslint configuration
+├── .prettierrc # Root Prettier configuration
+└── tsconfig.json # Root TypeScript configuration|
 
-To run any task with Nx use:
+### Key Features of the Monorepo Setup
 
-```sh
-npx nx <target> <project-name>
-```
+1. **Shared Code**:
+   - The `libs/shared` directory contains shared libraries (e.g., TypeScript interfaces, utility functions) that can be used by both the frontend and backend.
+2. **Dependency Management**:
+   - Nx ensures that dependencies between projects are managed efficiently.
+3. **Build and Test Automation**:
+   - Nx provides commands to build, test, and lint all projects in the monorepo.
+   - Example commands:
+     ```bash
+     nx build frontend  # Build the frontend app
+     nx test backend    # Run tests for the backend app
+     nx lint shared     # Lint the shared library
+     ```
+4. **Code Generation**:
+   - Nx generators automate the creation of new components, services, modules, etc.
+   - Example:
+     ```bash
+     nx generate @nx/vue:component my-component --project=frontend
+     nx generate @nestjs/schematics:service my-service --project=backend
+     ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Database
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **PostgreSQL**:
+  - A powerful, open-source relational database.
+- **TypeORM**:
 
-## Versioning and releasing
+  - Used to define entities (e.g., `Task`, `User`) and interact with the database.
+  - Example entity:
 
-To version and release the library use
+    ```typescript
+    @Entity()
+    export class Task {
+      @PrimaryGeneratedColumn()
+      id: number;
 
-```
-npx nx release
-```
+      @Column()
+      title: string;
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+      @Column()
+      status: string;
 
-[Learn more about Nx release &raquo;](hhttps://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+      @Column()
+      updated: string;
+    }
+    ```
 
-## Keep TypeScript project references up to date
+## API Communication
 
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
+- **RESTful API**:
 
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
+  - The NestJS backend exposes RESTful endpoints for the frontend to interact with.
+  - Example endpoint:
 
-```sh
-npx nx sync
-```
+    ```typescript
+    @Controller('tasks')
+    export class TasksController {
+      constructor(private readonly tasksService: TasksService) {}
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+      @Get()
+      findAll(): Promise<Task[]> {
+        return this.tasksService.findAll();
+      }
 
-```sh
-npx nx sync:check
-```
+      @Patch(':id')
+      updateStatus(
+        @Param('id') id: string,
+        @Body() updateTaskDto: UpdateTaskDto
+      ) {
+        return this.tasksService.updateStatus(+id, updateTaskDto.status);
+      }
+    }
+    ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+- **API Client**:
+  - The frontend uses an `apiClient` (likely based on `axios` or `fetch`) to communicate with the backend.
 
-## Set up CI!
+---
 
-### Step 1
+## Summary of Tech Stack
 
-To connect to Nx Cloud, run the following command:
+| Category                | Technology/Tool                            |
+| ----------------------- | ------------------------------------------ |
+| **Frontend**            | Vue.js (Composition API), TypeScript, Vite |
+| **Backend**             | NestJS, TypeScript, TypeORM, PostgreSQL    |
+| **Monorepo Management** | Nx                                         |
+| **Database**            | PostgreSQL                                 |
+| **API Communication**   | RESTful API, `apiClient`                   |
 
-```sh
-npx nx connect
-```
+---
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+This `README.md` provides a comprehensive overview of your project's tech stack and setup. Let me know if you need further adjustments!

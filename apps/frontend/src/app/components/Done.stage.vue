@@ -1,8 +1,6 @@
 <template>
   <div class="stage">
-    <h1 class="stage-title">
-      Done
-    </h1>
+    <h1 class="stage-title">Done</h1>
     <div class="stage-cards">
       <Card
         v-for="card in cases"
@@ -11,8 +9,8 @@
         :title="card.title"
         :status="card.status"
         :updated="card.updated"
-        @edit="onEditCard"
-        @delete="onDeleteCard"
+        @edit="handleEdit"
+        @delete="handleDelete"
       />
     </div>
   </div>
@@ -47,6 +45,18 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['edit', 'delete']);
+
+const handleEdit = (card: any) => {
+  console.log('Edit card:', card);
+  emit('edit', card);
+};
+
+const handleDelete = (card: any) => {
+  console.log('Edit card:', card);
+  emit('delete', card);
+};
 </script>
 
 <style scoped lang="scss">

@@ -14,6 +14,9 @@ export class Case {
   @Column()
   title!: string;
 
+  @Column({ type: 'text', nullable: true })
+  status!: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;
 

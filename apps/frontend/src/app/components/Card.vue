@@ -1,33 +1,15 @@
 <template>
-  <div
-    class="card"
-    draggable="true"
-    @dragstart="onDragStart"
-  >
+  <div class="card" draggable="true" @dragstart="onDragStart">
     <div class="card-header">
       <h2>{{ title }}</h2>
-      <span
-        class="card-status"
-      > {{ status }}</span>
+      <span class="card-status"> {{ status }}</span>
     </div>
     <div class="card-body">
-      <p class="card-updated">
-        Updated {{ updated }}
-      </p>
+      <p class="card-updated">Updated {{ updated }}</p>
     </div>
     <div class="card-actions">
-      <button
-        class="card-action"
-        @click="onEdit"
-      >
-        Edit
-      </button>
-      <button
-        class="card-action"
-        @click="onDelete"
-      >
-        Delete
-      </button>
+      <button class="card-action" @edit="handleEdit">Edit</button>
+      <button class="card-action" @delete="handleDelete">Delete</button>
     </div>
   </div>
 </template>
@@ -59,16 +41,23 @@ onMounted(() => {
   console.log('Card props:', props);
 });
 
-const emit = defineEmits(['drag-start']);
-
+const emit = defineEmits(['drag-start', 'edit', 'delete']);
 
 const onDragStart = (event: any) => {
   event.dataTransfer.dropEffect = 'move';
   event.dataTransfer.effectAllowed = 'move';
   event.dataTransfer.setData('caseId', props.id);
   emit('drag-start', props.id, props.id);
-}
+};
+const handleEdit = (card: any) => {
+  console.log('Edit card:', card);
+  emit('edit', card);
+};
 
+const handleDelete = (card: any) => {
+  console.log('Edit card:', card);
+  emit('delete', card);
+};
 </script>
 
 <style scoped lang="scss">
@@ -81,7 +70,6 @@ const onDragStart = (event: any) => {
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    
   }
 }
 
