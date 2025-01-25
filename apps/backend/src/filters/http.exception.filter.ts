@@ -1,4 +1,4 @@
-import { Catch } from '@nestjs/common';
+import { BadRequestException, Catch, HttpStatus } from '@nestjs/common';
 import { ExceptionFilter, ArgumentsHost } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -9,8 +9,8 @@ export class HttpExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    response.status(500).json({
-      statusCode: 5010,
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       message: exception.message || 'Internal server error',
       error: exception.name || 'Unknown backend Error',
       path: request.url,

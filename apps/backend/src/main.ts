@@ -1,14 +1,18 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { CasesModule } from './cases/cases.module';
+import { TasksModule } from './tasks/task.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(CasesModule);
+  const app = await NestFactory.create(TasksModule);
+  // Enable global validation
+  // app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true, // Automatically transform payloads to DTO instances
+      whitelist: true, // Strip non-whitelisted properties
+      forbidNonWhitelisted: true, // Throw errors for non-whitelisted properties
+    }),
+  );
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.enableCors({

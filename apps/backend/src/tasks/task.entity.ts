@@ -8,15 +8,15 @@ import { format } from 'date-fns';
 
 const dateTransformer: ValueTransformer = {
   to(value: Date): Date {
-    return value; // No transformation when saving to the database
+    return value;
   },
   from(value: Date): string {
-    return format(value, 'MM-dd-yyyy HH:mm:ss'); // Format when reading from the database
+    return format(value, 'MM-dd-yyyy HH:mm:ss'); 
   },
 };
 
 @Entity({ name: 'cases' })
-export class Case {
+export class Task {
   @PrimaryGeneratedColumn()
   id!: number;
 

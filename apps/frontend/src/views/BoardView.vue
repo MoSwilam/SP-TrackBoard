@@ -1,15 +1,35 @@
 <template>
-  <dev class="wrapper">
-    <h1 class="title">
-      Board
-    </h1>
+  <h1 class="title">
+    Board
+  </h1>
+  <Wrapper v-slot="{ tasks, loading, error }">
     <div class="container">
+      <!-- Loading State -->
+      <div
+        v-if="loading"
+        class="loading"
+      >
+        Loading...
+      </div>
+
+      <!-- Error State -->
+      <div
+        v-if="error"
+        class="error"
+      >
+        Failed to load tasks. Please try again later.
+      </div>
+
+    
+      <!-- Render Stages -->
       <Stage
-        :id="1"
+        v-for="stage in stages"
+        :id="stage.id"
+        :key="stage.id"
         class="drop-zone"
-        :status="TaskStatus.Todo"
-        title="TODO"
-        :cases="tasks.filter((task: any) => task.status === TaskStatus.Todo)"
+        :status="stage.status"
+        :title="stage.title"
+        :cases="tasks.filter((task: any) => task.status === stage.status)"
         @edit="handleEdit"
         @delete="handleDelete"
         @drop="onDrop"
@@ -17,163 +37,79 @@
         @dragover.prevent
         @add="handleAdd"
       />
-      <Stage
-        :id="2"
-        class="drop-zone"
-        :status="TaskStatus.InProgress"
-        title="IN PROGRESS"
-        :cases="tasks.filter((task: any) => task.status === TaskStatus.InProgress)"
-        @drop="onDrop"
-        @dragenter.prevent
-        @dragover.prevent
-      />
-      <Stage
-        :id="3"
-        class="drop-zone"
-        :status="TaskStatus.Done"
-        title="DONE"
-        :cases="tasks.filter((task: any) => task.status === TaskStatus.Done)"
-        @drop="onDrop"
-        @dragenter.prevent
-        @dragover.prevent
-      />
-      <Stage
-        :id="4"
-        class="drop-zone"
-        title="ARCHIVED"
-        :status="TaskStatus.Archived"
-        :cases="tasks.filter((task: any) => task.status === TaskStatus.Archived)"
-        @drop="onDrop"
-        @dragenter.prevent
-        @dragover.prevent
-      />
     </div>
-  </dev>
+  </Wrapper>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
 import Stage from '../app/components/Stage.vue';
 import apiClient from '../app/api-client/client';
+import Wrapper from '../app/components/Wrapper.vue';
+import { TaskStatus } from '../app/types/types';
 
-// Local state for tasks
-const tasks = ref([
-  { id: 1, title: 'Case 1', status: TaskStatus.Todo, updatedAt: '2021-10-01' },
-  { id: 2, title: 'Case 2', status: TaskStatus.Done, updatedAt: '2021-11-01' },
-  {
-    id: 3,
-    title: 'Case 3',
-    status: TaskStatus.InProgress,
-    updatedAt: '2021-11-01',
-  },
-  {
-    id: 4,
-    title: 'Case 4',
-    status: TaskStatus.InProgress,
-    updatedAt: '2021-11-01',
-  },
-  {
-    id: 5,
-    title: 'Case 5',
-    status: TaskStatus.InProgress,
-    updatedAt: '2021-11-01',
-  },
-]);
 
-const onEditCard = async (card: any) => {
+
+// Define stages
+const stages = [
+  { id: 1, status: TaskStatus.Todo, title: 'TODO' },
+  { id: 2, status: TaskStatus.InProgress, title: 'IN PROGRESS' },
+  { id: 3, status: TaskStatus.Done, title: 'DONE' },
+  { id: 4, status: TaskStatus.Archived, title: 'ARCHIVED' },
+];
+
+// Handle card edit
+const handleEdit = async (card: any) => {
   try {
     console.log('Edit card', card);
-    const response = await apiClient.patch(`/cases`, {
-      card,
-    });
-    ``;
+    const response = await apiClient.updateTask(card.id, card.status);
     console.log('Edit card response:', response);
   } catch (error) {
-    console.error(error);
+    console.error('Failed to edit card:', error);
   }
 };
 
-onMounted(async () => {
-  const response = await apiClient.get(`/cases`);
-  console.log('Response:', response);
-  tasks.value = response.data;
-});
-
-const onDrop = (itemId: number, toStage: TaskStatus) => {
-  const taskIndex = tasks.value.findIndex((task) => task.id === +itemId);
-
-  console.log('taskIndex', taskIndex);
-
-  if (taskIndex !== -1) {
-    const task = tasks.value[taskIndex];
-    // log info
-    console.log({
-      itemToUpdate: task,
-      toStage,
-      itemId,
-    });
-    tasks.value[taskIndex].status = toStage;
-    console.log('Updated tasks:', tasks.value);
-
-    // updateTaskStatus(itemId, toStage);
-  }
-};
-
-const updateTaskStatus = async (cardId: number, newStatus: string) => {
+// Handle card delete
+const handleDelete = async (card: any) => {
   try {
-    console.log('Edit card', cardId);
-    const response = await apiClient.post(`/cases`, {
-      title: 'Card title yooooo',
-    });
-    console.log('Edit card response:', response);
+    console.log('Delete card', card);
+    const response = await apiClient.deleteTask(card.id);
+    console.log('Delete card response:', response);
   } catch (error) {
-    console.error('Failed to update task status:', error);
+    console.error('Failed to delete card:', error);
   }
 };
 
-const emit = defineEmits(['edit', 'delete']);
-
-const handleEdit = (card: any) => {
-  console.log('Edit card:', card);
-  emit('edit', card);
+// Handle card drop (status update)
+const onDrop = async (itemId: number, toStage: TaskStatus) => {
+  try {
+    console.log('Updating card status:', itemId, toStage);
+    const response = await apiClient.updateTask(itemId, toStage);
+    console.log('Update card status response:', response);
+  } catch (error) {
+    console.error('Failed to update card status:', error);
+  }
 };
 
-const handleDelete = (card: any) => {
-  console.log('Edit card:', card);
-  emit('delete', card);
-};
-
-const handleAdd = () => {
-  const newCase = {
-    id: 10, // Unique ID
-    title: 'New Case',
-    status: TaskStatus.Todo,
-    updatedAt: new Date().toISOString(),
-  };
-  tasks.value.push(newCase); // Add new case to TODO stage
+// Handle adding a new card
+const handleAdd = async () => {
+  try {
+    const newTask = {
+      title: 'New Case',
+      status: TaskStatus.Todo,
+    };
+    console.log('Adding new card:', newTask);
+    const response = await apiClient.createTask(newTask.title);
+    console.log('Add card response:', response);
+  } catch (error) {
+    console.error('Failed to add card:', error);
+  }
 };
 </script>
 
-<script lang="ts">
-export enum TaskStatus {
-  Todo = 'todo',
-  InProgress = 'inProgress',
-  Done = 'done',
-  Archived = 'archived',
-}
-</script>
+
+
 
 <style scoped lang="scss">
-.wrapper {
-  // border: 4px solid #494949;
-  min-height: 800px;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: center;
-}
 
 .container {
   flex-grow: 1;

@@ -22,23 +22,18 @@
       <button 
         v-if="title === 'TODO'" 
         class="add-button" 
-        @click="handleAdd">
-            + Add Case
+        @click="handleAdd"
+      >
+        + Add Case
       </button>
     </div>
-    
   </div>
 </template>
 
 <script setup lang="ts">
 import Card from './Card.vue';
+import { ICard } from '../types/types';
 
-type ICard = {
-  id: number;
-  title: string;
-  status: string;
-  updatedAt: string;
-};
 
 const props = defineProps({
   id: {
