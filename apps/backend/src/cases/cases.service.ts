@@ -18,7 +18,8 @@ export class CasesService {
   }
 
   async findAll() {
-    return await this.casesRepo.find();
+    // return await this.casesRepo.find();
+    throw new Error('Not implemented');
   }
 
   async findOne(id: number) {

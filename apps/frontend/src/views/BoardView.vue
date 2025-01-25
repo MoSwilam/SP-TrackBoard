@@ -1,82 +1,82 @@
 <template>
   <dev class="wrapper">
-    <h1 class="title">Board</h1>
+    <h1 class="title">
+      Board
+    </h1>
     <div class="container">
-      <TodoStage
+      <Stage
         :id="1"
         class="drop-zone"
         :status="TaskStatus.Todo"
-        title="Todo"
+        title="TODO"
         :cases="tasks.filter((task: any) => task.status === TaskStatus.Todo)"
         @edit="handleEdit"
         @delete="handleDelete"
         @drop="onDrop"
         @dragenter.prevent
         @dragover.prevent
+        @add="handleAdd"
       />
-      <InProgressStage
+      <Stage
         :id="2"
         class="drop-zone"
         :status="TaskStatus.InProgress"
-        title="In Progress"
+        title="IN PROGRESS"
         :cases="tasks.filter((task: any) => task.status === TaskStatus.InProgress)"
         @drop="onDrop"
         @dragenter.prevent
         @dragover.prevent
       />
-      <DoneStage
+      <Stage
         :id="3"
         class="drop-zone"
         :status="TaskStatus.Done"
-        title="Done"
+        title="DONE"
         :cases="tasks.filter((task: any) => task.status === TaskStatus.Done)"
         @drop="onDrop"
         @dragenter.prevent
         @dragover.prevent
       />
-      <!--  <ArchivedStage
+      <Stage
         :id="4"
         class="drop-zone"
-        title="Archieved"
+        title="ARCHIVED"
         :status="TaskStatus.Archived"
         :cases="tasks.filter((task: any) => task.status === TaskStatus.Archived)"
         @drop="onDrop"
         @dragenter.prevent
         @dragover.prevent
-      /> -->
+      />
     </div>
   </dev>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import TodoStage from '../app/components/Todo.stage.vue';
-import DoneStage from '../app/components/Done.stage.vue';
-import InProgressStage from '../app/components/Inprogress.stage.vue';
-import ArchivedStage from '../app/components/Archived.stage.vue';
+import Stage from '../app/components/Stage.vue';
 import apiClient from '../app/api-client/client';
 
 // Local state for tasks
 const tasks = ref([
-  { id: 1, title: 'Case 1', status: TaskStatus.Todo, updated: '2021-10-01' },
-  { id: 2, title: 'Case 2', status: TaskStatus.Done, updated: '2021-11-01' },
+  { id: 1, title: 'Case 1', status: TaskStatus.Todo, updatedAt: '2021-10-01' },
+  { id: 2, title: 'Case 2', status: TaskStatus.Done, updatedAt: '2021-11-01' },
   {
     id: 3,
     title: 'Case 3',
     status: TaskStatus.InProgress,
-    updated: '2021-11-01',
+    updatedAt: '2021-11-01',
   },
   {
     id: 4,
     title: 'Case 4',
     status: TaskStatus.InProgress,
-    updated: '2021-11-01',
+    updatedAt: '2021-11-01',
   },
   {
     id: 5,
     title: 'Case 5',
     status: TaskStatus.InProgress,
-    updated: '2021-11-01',
+    updatedAt: '2021-11-01',
   },
 ]);
 
@@ -93,8 +93,10 @@ const onEditCard = async (card: any) => {
   }
 };
 
-onMounted(() => {
-  console.log('Tasks:', tasks.value);
+onMounted(async () => {
+  const response = await apiClient.get(`/cases`);
+  console.log('Response:', response);
+  tasks.value = response.data;
 });
 
 const onDrop = (itemId: number, toStage: TaskStatus) => {
@@ -140,6 +142,16 @@ const handleDelete = (card: any) => {
   console.log('Edit card:', card);
   emit('delete', card);
 };
+
+const handleAdd = () => {
+  const newCase = {
+    id: 10, // Unique ID
+    title: 'New Case',
+    status: TaskStatus.Todo,
+    updatedAt: new Date().toISOString(),
+  };
+  tasks.value.push(newCase); // Add new case to TODO stage
+};
 </script>
 
 <script lang="ts">
@@ -175,6 +187,7 @@ export enum TaskStatus {
 .title {
   margin: 1rem;
   font-size: 2rem;
+  font-weight: 600;
   color: #535457;
   align-self: flex-start;
 }
