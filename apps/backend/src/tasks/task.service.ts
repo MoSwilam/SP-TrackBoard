@@ -30,8 +30,17 @@ export class TasksService {
   }
 
   async update(id: number, updateTaskDto: any) {
-    await this.findOne(id);
-    return await this.tasksRepo.update(id, updateTaskDto);
+    const task = await this.tasksRepo.preload({
+      id,
+      ...updateTaskDto,
+    });
+  
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+  
+    // Save the updated task and return it
+    return await this.tasksRepo.save(task);
   }
 
   remove(id: number) {

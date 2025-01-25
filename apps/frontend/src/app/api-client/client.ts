@@ -27,7 +27,7 @@ const apiClient = {
   },
   updateTask: async (id: number, status: string) => {
     const path = `/tasks/${id}`;
-    return await apiClient.makeRequest('PUT', path, { status });
+    return await apiClient.makeRequest('PATCH', path, { status });
   },
   deleteTask: async (id: number) => {
     const path = `/tasks/${id}`;

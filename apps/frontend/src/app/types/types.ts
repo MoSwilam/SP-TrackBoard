@@ -5,7 +5,7 @@ export enum TaskStatus {
   Archived = 'archived',
 }
 
-export type ICard = {
+export type Task = {
   id: number;
   title: string;
   status: string;

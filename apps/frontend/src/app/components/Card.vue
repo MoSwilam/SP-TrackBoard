@@ -37,9 +37,9 @@ const props = defineProps({
 });
 
 // Log props when the component mounts
-onMounted(() => {
-  console.log('Card props:', props);
-});
+// onMounted(() => {
+//   console.log('Card props:', props);
+// });
 
 const emit = defineEmits(['drag-start', 'edit', 'delete']);
 
@@ -50,12 +50,10 @@ const onDragStart = (event: any) => {
   emit('drag-start', props.id, props.id);
 };
 const handleEdit = (card: any) => {
-  console.log('Edit card:', card);
   emit('edit', card);
 };
 
 const handleDelete = (card: any) => {
-  console.log('Edit card:', card);
   emit('delete', card);
 };
 </script>
@@ -66,6 +64,7 @@ const handleDelete = (card: any) => {
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0.5rem;
+  margin: 0 1rem;
   cursor: pointer;
   transition: box-shadow 0.3s ease;
 

@@ -1,8 +1,8 @@
 <template>
-  <h1 class="title">
-    Board
-  </h1>
-  <Wrapper v-slot="{ tasks, loading, error }">
+  <div class="wrapper">
+    <h1 class="title">
+      Board
+    </h1>
     <div class="container">
       <!-- Loading State -->
       <div
@@ -38,18 +38,20 @@
         @add="handleAdd"
       />
     </div>
-  </Wrapper>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import Stage from '../app/components/Stage.vue';
 import apiClient from '../app/api-client/client';
 import Wrapper from '../app/components/Wrapper.vue';
-import { TaskStatus } from '../app/types/types';
+import { Task, TaskStatus } from '../app/types/types';
 
+const tasks = ref<Task[]>([]);
+const loading = ref(true);
+const error = ref(false);
 
-
-// Define stages
 const stages = [
   { id: 1, status: TaskStatus.Todo, title: 'TODO' },
   { id: 2, status: TaskStatus.InProgress, title: 'IN PROGRESS' },
@@ -57,18 +59,37 @@ const stages = [
   { id: 4, status: TaskStatus.Archived, title: 'ARCHIVED' },
 ];
 
-// Handle card edit
+const emit = defineEmits(['update-card']);
+
+const fetchTasks = async () => {
+  try {
+    loading.value = true;
+    error.value = false;
+
+    const response = await apiClient.getTasks();
+    console.log('Fetched tasks:', response);
+    tasks.value = response;
+  } catch (err) {
+    console.error('Failed to fetch tasks:', err);
+    error.value = true;
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchTasks();
+});
+
 const handleEdit = async (card: any) => {
   try {
-    console.log('Edit card', card);
-    const response = await apiClient.updateTask(card.id, card.status);
-    console.log('Edit card response:', response);
+    await apiClient.updateTask(card.id, card.status);
+    emit('update-card');
   } catch (error) {
     console.error('Failed to edit card:', error);
   }
 };
 
-// Handle card delete
 const handleDelete = async (card: any) => {
   try {
     console.log('Delete card', card);
@@ -79,18 +100,19 @@ const handleDelete = async (card: any) => {
   }
 };
 
-// Handle card drop (status update)
 const onDrop = async (itemId: number, toStage: TaskStatus) => {
   try {
-    console.log('Updating card status:', itemId, toStage);
-    const response = await apiClient.updateTask(itemId, toStage);
-    console.log('Update card status response:', response);
+    const updateRes = await apiClient.updateTask(itemId, toStage);
+    // Update the task status in the local state
+    const taskIndex = tasks.value.findIndex((task) => task.id === updateRes.id);
+    if (taskIndex !== -1) {
+      tasks.value[taskIndex].status = toStage;
+    }
   } catch (error) {
     console.error('Failed to update card status:', error);
   }
 };
 
-// Handle adding a new card
 const handleAdd = async () => {
   try {
     const newTask = {
@@ -104,20 +126,21 @@ const handleAdd = async () => {
     console.error('Failed to add card:', error);
   }
 };
+
 </script>
-
-
 
 
 <style scoped lang="scss">
 
-.container {
-  flex-grow: 1;
+.wrapper {
+  // border: 4px solid #494949;
+  min-height: 800px;
   display: flex;
-  gap: 1rem; /* Add spacing between the components */
-  width: 100%;
-  max-width: 1200px; /* Adjust as needed */
-  padding: 1rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
 }
 
 .title {
@@ -126,6 +149,15 @@ const handleAdd = async () => {
   font-weight: 600;
   color: #535457;
   align-self: flex-start;
+}
+
+.container {
+  flex-grow: 1;
+  display: flex;
+  gap: 1rem; /* Add spacing between the components */
+  width: 100%;
+  max-width: 1200px; /* Adjust as needed */
+  padding: 1rem;
 }
 
 @media (max-width: 1000px) {

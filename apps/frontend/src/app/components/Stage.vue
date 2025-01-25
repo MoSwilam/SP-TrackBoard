@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import Card from './Card.vue';
-import { ICard } from '../types/types';
+import { Task } from '../types/types';
 
 
 const props = defineProps({
@@ -49,7 +49,7 @@ const props = defineProps({
     required: true,
   },
   cases: {
-    type: Array as () => ICard[],
+    type: Array as () => Task[],
     required: true,
   },
 });
@@ -80,7 +80,7 @@ const handleAdd = () => {
 
 <style scoped lang="scss">
 .stage {
-  background-color: #f9f9f9;
+  background-color: #f7f7f8;
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
