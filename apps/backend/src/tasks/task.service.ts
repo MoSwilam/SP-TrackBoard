@@ -12,9 +12,9 @@ export class TasksService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto) {
+    console.log('createTaskDto', createTaskDto);
     const newTask = this.tasksRepo.create(createTaskDto);
-    const saved = await this.tasksRepo.save(newTask);
-    return saved;
+    return await this.tasksRepo.save(newTask);
   }
 
   async findAll() {
@@ -29,7 +29,8 @@ export class TasksService {
     return item;
   }
 
-  async update(id: number, updateTaskDto: any) {
+  async update(id: number, updateTaskDto: Partial<CreateTaskDto>) {
+    console.log('updateTaskDto', updateTaskDto);
     const task = await this.tasksRepo.preload({
       id,
       ...updateTaskDto,

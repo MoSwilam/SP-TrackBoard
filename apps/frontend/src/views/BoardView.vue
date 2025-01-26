@@ -1,25 +1,14 @@
 <template>
   <div class="wrapper">
-    <h1 class="title">
-      Board
-    </h1>
+    <h1 class="title">Board</h1>
     <div class="container">
       <!-- Loading State -->
-      <div
-        v-if="loading"
-        class="loading"
-      >
-        Loading...
-      </div>
+      <div v-if="loading" class="loading">Loading...</div>
 
       <!-- Error State -->
-      <div
-        v-if="error"
-        class="error"
-      >
+      <div v-if="error" class="error">
         Failed to load tasks. Please try again later.
       </div>
-
     
       <!-- Render Stages -->
       <Stage
@@ -42,10 +31,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import Stage from '../app/components/Stage.vue';
 import apiClient from '../app/api-client/client';
-import Wrapper from '../app/components/Wrapper.vue';
 import { Task, TaskStatus } from '../app/types/types';
 
 const tasks = ref<Task[]>([]);
@@ -59,7 +47,10 @@ const stages = [
   { id: 4, status: TaskStatus.Archived, title: 'ARCHIVED' },
 ];
 
-const emit = defineEmits(['update-card']);
+const getTasksByStatus = computed(() => {
+  return (status: TaskStatus) => tasks.value.filter(task => task.status === status);
+});
+
 
 const fetchTasks = async () => {
   try {
@@ -83,18 +74,23 @@ onMounted(() => {
 
 const handleEdit = async (card: any) => {
   try {
-    await apiClient.updateTask(card.id, card.status);
-    emit('update-card');
+    console.log('Edit card', card);
+    await apiClient.updateTask(card.id, card);
+    const taskIndex = tasks.value.findIndex((task) => task.id === card.id);
+    if (taskIndex !== -1) {
+      tasks.value[taskIndex].title = card.title;
+    }
   } catch (error) {
     console.error('Failed to edit card:', error);
   }
 };
 
-const handleDelete = async (card: any) => {
+const handleDelete = async (taskToDelete: Task) => {
   try {
-    console.log('Delete card', card);
-    const response = await apiClient.deleteTask(card.id);
-    console.log('Delete card response:', response);
+    console.log('Delete card', taskToDelete);
+    await apiClient.deleteTask(taskToDelete.id);
+    tasks.value = tasks.value.filter(task => task.id !== taskToDelete.id);
+    console.log('card deleted');
   } catch (error) {
     console.error('Failed to delete card:', error);
   }
@@ -103,7 +99,6 @@ const handleDelete = async (card: any) => {
 const onDrop = async (itemId: number, toStage: TaskStatus) => {
   try {
     const updateRes = await apiClient.updateTask(itemId, toStage);
-    // Update the task status in the local state
     const taskIndex = tasks.value.findIndex((task) => task.id === updateRes.id);
     if (taskIndex !== -1) {
       tasks.value[taskIndex].status = toStage;
@@ -113,15 +108,12 @@ const onDrop = async (itemId: number, toStage: TaskStatus) => {
   }
 };
 
-const handleAdd = async () => {
+const handleAdd = async (title: string) => {
   try {
-    const newTask = {
-      title: 'New Case',
-      status: TaskStatus.Todo,
-    };
-    console.log('Adding new card:', newTask);
-    const response = await apiClient.createTask(newTask.title);
+    console.log('Adding new card:', title);
+    const response = await apiClient.createTask(title);
     console.log('Add card response:', response);
+    tasks.value.push(response);
   } catch (error) {
     console.error('Failed to add card:', error);
   }

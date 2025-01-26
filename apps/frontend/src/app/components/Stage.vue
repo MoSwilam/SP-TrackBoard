@@ -1,7 +1,7 @@
 <template>
   <div
     class="stage" 
-    @drop="handleDrop" 
+    @drop="handleDrop"
     @dragenter.prevent 
     @dragover.prevent
   >
@@ -11,6 +11,7 @@
     <div class="stage-cards">
       <Card
         v-for="card in cases"
+        
         :id="card.id"
         :key="card.id"
         :title="card.title"
@@ -19,10 +20,22 @@
         @edit="handleEdit"
         @delete="handleDelete"
       />
-      <button 
-        v-if="title === 'TODO'" 
-        class="add-button" 
-        @click="handleAdd"
+      <!-- Editing Mode: Input Field + Save Button -->
+      <div v-if="isEditing" class="edit-container">
+        <input
+          v-model="newTaskTitle"
+          class="edit-input"
+          placeholder="Enter task title"
+        />
+        <Button class="save-button" @click="handleAdd">
+          Save
+        </Button>
+      </div>
+
+      <button
+        v-if="title === 'TODO' && !isEditing"
+        class="add-button"
+        @click="toggleEdit"
       >
         + Add Case
       </button>
@@ -31,30 +44,29 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import Card from './Card.vue';
 import { Task } from '../types/types';
 
+const props = defineProps<{
+  id: number;
+  title: string;
+  status: string;
+  cases: Task[];
+}>();
 
-const props = defineProps({
-  id: {
-    type: Number,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: String,
-    required: true,
-  },
-  cases: {
-    type: Array as () => Task[],
-    required: true,
-  },
+// Log props when the component mounts
+onMounted(() => {
+  console.log('Stage props:', props);
 });
 
+const isEditing = ref(false);
+const editedTitle = ref(props.title);
+const newTaskTitle = ref('');
+
+
 const emit = defineEmits(['drop', 'add', 'edit', 'delete']);
+
 
 const handleDrop = (event: DragEvent) => {
   const cardId = event.dataTransfer?.getData('caseId'); // Get the card ID
@@ -63,8 +75,17 @@ const handleDrop = (event: DragEvent) => {
   }
 };
 
+const toggleEdit = () => {
+  if (isEditing.value) {
+    handleAdd(); // Save changes when switching back to view mode
+  } else {
+    isEditing.value = true; // Switch to edit mode
+  }
+};
+
 const handleEdit = (card: any) => {
   console.log('Edit card:', card);
+  isEditing.value = false;
   emit('edit', card);
 };
 
@@ -74,15 +95,16 @@ const handleDelete = (card: any) => {
 };
 
 const handleAdd = () => {
-  emit('add');
+  emit('add', newTaskTitle.value);
 };
 </script>
 
 <style scoped lang="scss">
 .stage {
-  background-color: #f7f7f8;
+  
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  background-color: #e4e4e4;
   margin-bottom: 1rem;
   // padding: 1rem;
   flex: 1;
@@ -113,7 +135,6 @@ const handleAdd = () => {
   padding: 0.5rem 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: #000000;
-  padding: 1rem;
   cursor: pointer;
   font-size: 0.875rem;
   text-align: center;
@@ -124,4 +145,49 @@ const handleAdd = () => {
     background-color: #f0f0f0;
   }
 }
+
+.edit-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  // padding: 0.5rem; // Add padding to prevent overflow
+  border-radius: 0.25rem; // Optional: Add border radius for better appearance
+}
+
+
+.edit-input {
+  flex-grow: 1;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.25rem;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #007bff; // Change color on hover
+  }
+}
+
+.save-button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  margin: 0 1rem;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
 </style>

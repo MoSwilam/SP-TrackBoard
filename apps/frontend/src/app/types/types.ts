@@ -10,4 +10,5 @@ export type Task = {
   title: string;
   status: string;
   updatedAt: string;
+  createdat: string;
 };

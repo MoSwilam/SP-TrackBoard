@@ -15,7 +15,7 @@ const dateTransformer: ValueTransformer = {
   },
 };
 
-@Entity({ name: 'cases' })
+@Entity({ name: 'tasks' })
 export class Task {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -23,7 +23,7 @@ export class Task {
   @Column()
   title!: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: 'todo' })
   status!: string;
 
   @Column({ 

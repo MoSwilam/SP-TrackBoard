@@ -1,21 +1,42 @@
 <template>
-  <div class="card" draggable="true" @dragstart="onDragStart">
+  <div
+    class="card"
+    draggable="true"
+    @dragstart="onDragStart"
+  >
     <div class="card-header">
-      <h2>{{ title }}</h2>
-      <span class="card-status"> {{ status }}</span>
+      <!-- Display Title or Input Field -->
+      <input
+        v-if="isEditing"
+        v-model="editedTitle"
+        class="edit-input"
+        @keyup.enter="saveEdit"
+      >
+      <span
+        v-else
+        class="card-title"
+      >{{ title }}</span>
+
+      <!-- Edit Button (Pen or Checkmark) -->
+      <button
+        class="edit-button"
+        @click="toggleEdit"
+      >
+        <span v-if="isEditing">✔️</span> <!-- Checkmark -->
+        <span v-else>✏️</span> <!-- Pen -->
+      </button>
     </div>
     <div class="card-body">
-      <p class="card-updated">Updated {{ updated }}</p>
-    </div>
-    <div class="card-actions">
-      <button class="card-action" @edit="handleEdit">Edit</button>
-      <button class="card-action" @delete="handleDelete">Delete</button>
+      <!-- <p>{{ status }}</p> -->
+      <p>Updated: {{ updated }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { ref } from 'vue';
+
 
 const props = defineProps({
   id: {
@@ -35,22 +56,33 @@ const props = defineProps({
     required: true,
   },
 });
+const isEditing = ref(false);
+const editedTitle = ref(props.title);
 
 // Log props when the component mounts
-// onMounted(() => {
-//   console.log('Card props:', props);
-// });
+
 
 const emit = defineEmits(['drag-start', 'edit', 'delete']);
+
+// Toggle between edit and view modes
+const toggleEdit = () => {
+  if (isEditing.value) {
+    saveEdit(); // Save changes when switching back to view mode
+  } else {
+    isEditing.value = true; // Switch to edit mode
+  }
+};
+
+const saveEdit = () => {
+  isEditing.value = false;
+  emit('edit', { id: props.id, title: editedTitle.value });
+};
 
 const onDragStart = (event: any) => {
   event.dataTransfer.dropEffect = 'move';
   event.dataTransfer.effectAllowed = 'move';
   event.dataTransfer.setData('caseId', props.id);
   emit('drag-start', props.id, props.id);
-};
-const handleEdit = (card: any) => {
-  emit('edit', card);
 };
 
 const handleDelete = (card: any) => {
@@ -118,7 +150,7 @@ const handleDelete = (card: any) => {
 }
 
 .card-updated {
-  font-size: 0.875rem;
+  font-size: 0.600rem;
   color: #6b7280;
   margin: 0;
 }
@@ -140,5 +172,32 @@ const handleDelete = (card: any) => {
   &:hover {
     background-color: #f3f4f6;
   }
+}
+
+.edit-input {
+  flex-grow: 1;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.25rem;
+}
+
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #007bff; // Change color on hover
+  }
+}
+
+.card-body {
+  font-size: 0.875rem;
+  color: #666;
 }
 </style>
