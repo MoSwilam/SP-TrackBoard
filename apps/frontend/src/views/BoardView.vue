@@ -18,7 +18,7 @@
         class="drop-zone"
         :status="stage.status"
         :title="stage.title"
-        :cases="tasks.filter((task: any) => task.status === stage.status)"
+        :tasks="tasks.filter((task: any) => task.status === stage.status)"
         @edit="handleEdit"
         @delete="handleDelete"
         @drop="onDrop"

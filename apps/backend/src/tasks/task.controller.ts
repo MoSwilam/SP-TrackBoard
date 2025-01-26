@@ -30,7 +30,7 @@ export class TasksController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: any) {
+  update(@Param('id') id: string, @Body() updateTaskDto: Partial<CreateTaskDto>) {
     return this.tasksService.update(+id, updateTaskDto);
   }
 

@@ -12,7 +12,6 @@ export class TasksService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto) {
-    console.log('createTaskDto', createTaskDto);
     const newTask = this.tasksRepo.create(createTaskDto);
     return await this.tasksRepo.save(newTask);
   }
@@ -30,7 +29,6 @@ export class TasksService {
   }
 
   async update(id: number, updateTaskDto: Partial<CreateTaskDto>) {
-    console.log('updateTaskDto', updateTaskDto);
     const task = await this.tasksRepo.preload({
       id,
       ...updateTaskDto,
@@ -40,7 +38,6 @@ export class TasksService {
       throw new NotFoundException('Task not found');
     }
   
-    // Save the updated task and return it
     return await this.tasksRepo.save(task);
   }
 

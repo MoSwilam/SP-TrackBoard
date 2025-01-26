@@ -10,8 +10,7 @@
     </h1>
     <div class="stage-cards">
       <Card
-        v-for="card in cases"
-        
+        v-for="card in tasks"
         :id="card.id"
         :key="card.id"
         :title="card.title"
@@ -20,8 +19,8 @@
         @edit="handleEdit"
         @delete="handleDelete"
       />
-      <!-- Editing Mode: Input Field + Save Button -->
-      <div v-if="isEditing" class="edit-container">
+      <div v-if="isEditing" 
+          class="edit-container">
         <input
           v-model="newTaskTitle"
           class="edit-input"
@@ -36,10 +35,8 @@
         class="add-button"
         @click="toggleEdit"
       >
-        + Add Case
+        Add a task
       </button>
-
-      
     </div>
   </div>
 </template>
@@ -54,7 +51,7 @@ const props = defineProps<{
   id: number;
   title: string;
   status: string;
-  cases: Task[];
+  tasks: Task[];
 }>();
 
 // Log props when the component mounts
@@ -105,15 +102,16 @@ const handleAdd = () => {
 <style scoped lang="scss">
 
 .stage {
-  
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
   background-color: #e4e4e4;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 1rem;
-  // padding: 1rem;
-  flex: 1;
+  flex-direction: column;
   width: 100%;
   min-width: 200px;
+  min-height: 200px;
 }
 
 .stage-title {
@@ -129,24 +127,26 @@ const handleAdd = () => {
 .stage-cards {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   gap: 1rem;
 }
 
 .add-button {
   background-color: #ffffff;
-  border: 1px dashed #e0e0e0;
+  
   border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: #000000;
+  margin-top: auto;
   cursor: pointer;
   font-size: 0.875rem;
   text-align: center;
   transition: background-color 0.2s;
-  margin-top: auto;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #00365f;
+    color: #ffffff;
   }
 }
 

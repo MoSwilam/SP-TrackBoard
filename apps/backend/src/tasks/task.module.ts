@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TasksService } from './task.service';
 import { TasksController } from './task.controller';
-import { AppConfigModule } from '../app-config/app-config.module';
+import { AppConfigModule } from '../config/app-config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { APP_FILTER } from '@nestjs/core';

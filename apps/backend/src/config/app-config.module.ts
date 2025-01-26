@@ -21,6 +21,9 @@ import { Task } from '../tasks/task.entity';
           database: configService.get('DB_DATABASE'),
           entities: [Task],
           synchronize: true,
+          ssl: {
+            rejectUnauthorized: false, // Use true in production with a valid CA certificate
+          },
         };
       },
       inject: [ConfigService],

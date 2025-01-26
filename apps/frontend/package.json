@@ -8,7 +8,10 @@
     "sourceRoot": "apps/frontend/src"
   },
   "dependencies": {
+    "@primevue/themes": "^4.2.5",
     "axios": "^1.7.9",
-    "primeicons": "^7.0.0"
+    "primeflex": "^3.3.1",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.2.5"
   }
 }

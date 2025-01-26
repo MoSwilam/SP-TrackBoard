@@ -5,37 +5,52 @@
     @dragstart="onDragStart"
   >
     <div class="card-header">
-      <!-- Display Title or Input Field -->
       <input
         v-if="isEditing"
         v-model="editedTitle"
         class="edit-input"
         @keyup.enter="saveEdit"
       >
-      <i class="pi pi-check" @click="saveEdit" v-if="isEditing" style="color: slateblue"></i>
+      <i
+        v-if="isEditing"
+        class="pi pi-check"
+        style="color: #00365f; font-weight: bolder;"
+        @click="saveEdit"
+      />
       <span
         v-else
         class="card-title"
       >{{ title }}</span>
+      <i
+        v-if="!isEditing" 
+        class="pi pi-pencil" 
+        @click="toggleEdit"
+      />
 
-      <!-- Edit Button (Pen or Checkmark) -->
       <button
         class="edit-button"
-        @click="toggleEdit"
       >
-        <i class="pi pi-pencil" v-if="!isEditing"></i>
-        <i class="pi pi-times" v-if="!isEditing" @click="handleDelete"></i>
+        <i
+          v-if="!isEditing" 
+          class="pi pi-times" 
+          @click="handleDelete" 
+        />
       </button>
     </div>
     <div class="card-body">
-      <!-- <p>{{ status }}</p> -->
-      <p>Updated: {{ updated }}</p>
+      <ProgressBar
+        :value="50" 
+        class="p-progressbar" 
+      />
+      <p class="card-updated">
+        Updated: {{ updated }}
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import ProgressBar from 'primevue/progressbar';
 import 'primeicons/primeicons.css'
 import { ref } from 'vue';
 
@@ -61,17 +76,15 @@ const props = defineProps({
 const isEditing = ref(false);
 const editedTitle = ref(props.title);
 
-// Log props when the component mounts
 
 
 const emit = defineEmits(['drag-start', 'edit', 'delete']);
 
-// Toggle between edit and view modes
 const toggleEdit = () => {
   if (isEditing.value) {
-    saveEdit(); // Save changes when switching back to view mode
+    saveEdit();
   } else {
-    isEditing.value = true; // Switch to edit mode
+    isEditing.value = true;
   }
 };
 
@@ -108,17 +121,35 @@ const handleDelete = (card: any) => {
   }
 }
 
+:deep(.p-progressbar) {
+  height: 10px;
+  border-radius: 4px; 
+  background-color: #e9ecef;
+}
+
+:deep(.p-progressbar-value) {
+  background-color: #00365f !important;
+  border-radius: 4px;
+  color: #00365f;
+  font-size: small;
+}
+
+:deep(.p-progressbar-label) {
+  display: none;
+}
+
+
 .card-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
 .card-title {
   font-size: 1.25rem;
+  color: #333 !important;
   font-weight: 600;
-  margin: 0;
+  margin-right: 10px;
 }
 
 .card-status {
@@ -149,13 +180,15 @@ const handleDelete = (card: any) => {
 }
 
 .card-body {
-  margin-bottom: 1rem;
+  flex-direction: column;
+  display: flex;
+  align-content: space-between;
 }
 
 .card-updated {
-  font-size: 0.600rem;
+  font-size: 0.7rem;
+  margin-top: 10px;
   color: #6b7280;
-  margin: 0;
 }
 
 .card-actions {
@@ -189,6 +222,7 @@ const handleDelete = (card: any) => {
 .edit-button {
   background: none;
   border: none;
+  margin-left: auto;
   cursor: pointer;
   font-size: 1rem;
   padding: 0;
