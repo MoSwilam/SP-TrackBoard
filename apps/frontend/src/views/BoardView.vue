@@ -36,7 +36,7 @@ import Stage from '../app/components/Stage.vue';
 import apiClient from '../app/api-client/client';
 import { Task, TaskStatus } from '../app/types/types';
 
-const tasks = ref<Task[]>([]);
+const tasks = ref<Task[]>([]);``
 const loading = ref(true);
 const error = ref(false);
 
@@ -87,7 +87,7 @@ const handleEdit = async (card: any) => {
 
 const handleDelete = async (taskToDelete: Task) => {
   try {
-    console.log('Delete card', taskToDelete);
+    console.log('Delete card from BoardView', taskToDelete);
     await apiClient.deleteTask(taskToDelete.id);
     tasks.value = tasks.value.filter(task => task.id !== taskToDelete.id);
     console.log('card deleted');

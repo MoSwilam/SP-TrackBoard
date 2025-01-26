@@ -12,6 +12,7 @@
         class="edit-input"
         @keyup.enter="saveEdit"
       >
+      <i class="pi pi-check" @click="saveEdit" v-if="isEditing" style="color: slateblue"></i>
       <span
         v-else
         class="card-title"
@@ -22,8 +23,8 @@
         class="edit-button"
         @click="toggleEdit"
       >
-        <span v-if="isEditing">✔️</span> <!-- Checkmark -->
-        <span v-else>✏️</span> <!-- Pen -->
+        <i class="pi pi-pencil" v-if="!isEditing"></i>
+        <i class="pi pi-times" v-if="!isEditing" @click="handleDelete"></i>
       </button>
     </div>
     <div class="card-body">
@@ -35,6 +36,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import 'primeicons/primeicons.css'
 import { ref } from 'vue';
 
 
@@ -76,6 +78,7 @@ const toggleEdit = () => {
 const saveEdit = () => {
   isEditing.value = false;
   emit('edit', { id: props.id, title: editedTitle.value });
+  editedTitle.value = '';
 };
 
 const onDragStart = (event: any) => {
@@ -86,7 +89,7 @@ const onDragStart = (event: any) => {
 };
 
 const handleDelete = (card: any) => {
-  emit('delete', card);
+  emit('delete', { id: props.id, title: props.title });
 };
 </script>
 

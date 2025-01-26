@@ -31,7 +31,6 @@
           Save
         </Button>
       </div>
-
       <button
         v-if="title === 'TODO' && !isEditing"
         class="add-button"
@@ -39,6 +38,8 @@
       >
         + Add Case
       </button>
+
+      
     </div>
   </div>
 </template>
@@ -46,6 +47,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import Card from './Card.vue';
+
 import { Task } from '../types/types';
 
 const props = defineProps<{
@@ -61,7 +63,6 @@ onMounted(() => {
 });
 
 const isEditing = ref(false);
-const editedTitle = ref(props.title);
 const newTaskTitle = ref('');
 
 
@@ -70,6 +71,7 @@ const emit = defineEmits(['drop', 'add', 'edit', 'delete']);
 
 const handleDrop = (event: DragEvent) => {
   const cardId = event.dataTransfer?.getData('caseId'); // Get the card ID
+  isEditing.value = false; // Exit edit mode when dropping a card
   if (cardId) {
     emit('drop', +cardId, props.status); // Emit the drop event with card ID and target stage
   }
@@ -90,16 +92,18 @@ const handleEdit = (card: any) => {
 };
 
 const handleDelete = (card: any) => {
-  console.log('Edit card:', card);
+  console.log('Delete card:', card);
   emit('delete', card);
 };
 
 const handleAdd = () => {
+  isEditing.value = false;
   emit('add', newTaskTitle.value);
 };
 </script>
 
 <style scoped lang="scss">
+
 .stage {
   
   border-radius: 0.5rem;

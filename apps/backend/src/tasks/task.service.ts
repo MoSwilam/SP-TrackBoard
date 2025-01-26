@@ -44,7 +44,8 @@ export class TasksService {
     return await this.tasksRepo.save(task);
   }
 
-  remove(id: number) {
-    return this.tasksRepo.delete(id);
+  async remove(id: number) {
+    console.log('delete task with Id', id);
+    return await this.tasksRepo.delete(id);
   }
 }

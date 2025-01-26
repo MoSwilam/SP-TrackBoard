@@ -8,7 +8,7 @@ const axiosClient = axios.create({
 });
 
 const apiClient = {
-  makeRequest: async (method: string, url: string, data: unknown) => {
+  makeRequest: async (method: string, url: string, data?: unknown) => {
     const response = await axiosClient.request({
       method,
       url,
@@ -23,15 +23,16 @@ const apiClient = {
   },
   getTasks: async () => {
     const path = '/tasks';
-    return await apiClient.makeRequest('GET', path, null);
+    return await apiClient.makeRequest('GET', path);
   },
   updateTask: async (id: number, status: string) => {
     const path = `/tasks/${id}`;
     return await apiClient.makeRequest('PATCH', path, { status });
   },
   deleteTask: async (id: number) => {
+    console.log('deleteTask from API client', id);
     const path = `/tasks/${id}`;
-    return await apiClient.makeRequest('DELETE', path, null);
+    return await apiClient.makeRequest('DELETE', path);
   }
 };
 
