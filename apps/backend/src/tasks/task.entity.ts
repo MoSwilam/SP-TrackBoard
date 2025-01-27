@@ -21,7 +21,7 @@ export class Task {
   id!: number;
 
   @Column()
-  title!: string;
+  title: string;
 
   @Column({ type: 'text', default: 'todo' })
   status!: string;

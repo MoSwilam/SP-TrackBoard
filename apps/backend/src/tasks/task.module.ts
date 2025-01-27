@@ -11,11 +11,12 @@ import { HttpExceptionsFilter } from '../filters/http.exception.filter';
   imports: [AppConfigModule, TypeOrmModule.forFeature([Task])],
   controllers: [TasksController],
   providers: [
-    TasksService,
+    
     {
       provide: APP_FILTER,
       useClass: HttpExceptionsFilter
-    }
+    },
+    TasksService,
   ],
 })
 export class TasksModule {}

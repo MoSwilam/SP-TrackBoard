@@ -182,15 +182,14 @@ const handleAdd = () => {
 
 .save-button {
   padding: 0.5rem 1rem;
-  background-color: #007bff;
-  margin: 0 1rem;
+  background-color: #00365f;
   color: white;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #313437;
   }
 }
 

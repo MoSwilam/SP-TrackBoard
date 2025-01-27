@@ -14,7 +14,7 @@
 - **Framework**: NestJS
 - **Language**: TypeScript
 - **ORM**: TypeORM
-- **Database**: PostgreSQL
+- **Database**: PostgreSQL (connected to a remote db for demo purposes)
 
 ## Monorepo Management
 
@@ -43,12 +43,6 @@ my-monorepo/
 │ │ ├── controllers/
 │ │ └── main.ts
 │ └── ormconfig.json # TypeORM configuration
-├── libs/
-│ └── shared/ # Shared libraries (e.g., types, utilities)
-│ ├── src/
-│ │ ├── interfaces/
-│ │ └── utils/
-│ └── tsconfig.json
 ├── nx.json # Nx configuration
 ├── package.json # Root package.json
 ├── eslint.config.cjs # Root Eslint configuration
@@ -57,83 +51,62 @@ my-monorepo/
 
 ### Key Features of the Monorepo Setup
 
-1. **Shared Code**:
-   - The `libs/shared` directory contains shared libraries (e.g., TypeScript interfaces, utility functions) that can be used by both the frontend and backend.
-2. **Dependency Management**:
+1. **Dependency Management**:
    - Nx ensures that dependencies between projects are managed efficiently.
-3. **Build and Test Automation**:
+2. **Build and Test Automation**:
    - Nx provides commands to build, test, and lint all projects in the monorepo.
    - Example commands:
      ```bash
      nx build frontend  # Build the frontend app
      nx test backend    # Run tests for the backend app
-     nx lint shared     # Lint the shared library
      ```
-4. **Code Generation**:
+3. **Code Generation**:
    - Nx generators automate the creation of new components, services, modules, etc.
    - Example:
      ```bash
      nx generate @nx/vue:component my-component --project=frontend
      nx generate @nestjs/schematics:service my-service --project=backend
      ```
+4. possiblilty to easily create and use a shared library between projects in the workspace
 
-## Database
 
-- **PostgreSQL**:
-  - A powerful, open-source relational database.
-- **TypeORM**:
+# Installation
 
-  - Used to define entities (e.g., `Task`, `User`) and interact with the database.
-  - Example entity:
+1- clone the repository to your local machine:
 
-    ```typescript
-    @Entity()
-    export class Task {
-      @PrimaryGeneratedColumn()
-      id: number;
+```bash
+git clone https://github.com/MoSwilam/SP-TrackBoard.git
+```
 
-      @Column()
-      title: string;
+2. Setup Environment Variables
 
-      @Column()
-      status: string;
+Prepare the backend environment variables by copying the example file:
 
-      @Column()
-      updated: string;
-    }
-    ```
+```bash
+cp apps/backend/.env-example apps/backend/.env
+```
 
-## API Communication
+Open the newly created .env file in apps/backend/ and set the DB_PASSWORD using the password provided in your email:
 
-- **RESTful API**:
+```bash
+DB_PASSWORD=<PASSWORD-FROM-THE-EMAIL>
+```
 
-  - The NestJS backend exposes RESTful endpoints for the frontend to interact with.
-  - Example endpoint:
+3. Install dependencies
 
-    ```typescript
-    @Controller('tasks')
-    export class TasksController {
-      constructor(private readonly tasksService: TasksService) {}
 
-      @Get()
-      findAll(): Promise<Task[]> {
-        return this.tasksService.findAll();
-      }
+```bash
+npm i --legacy-peer-deps
+```
 
-      @Patch(':id')
-      updateStatus(
-        @Param('id') id: string,
-        @Body() updateTaskDto: UpdateTaskDto
-      ) {
-        return this.tasksService.updateStatus(+id, updateTaskDto.status);
-      }
-    }
-    ```
+## Running the Application
 
-- **API Client**:
-  - The frontend uses an `apiClient` (likely based on `axios` or `fetch`) to communicate with the backend.
+then finally:
+```bash
+make run
+```
 
----
+The frontend is set to run at `localhost:4200`
 
 ## Summary of Tech Stack
 
@@ -147,4 +120,3 @@ my-monorepo/
 
 ---
 
-This `README.md` provides a comprehensive overview of your project's tech stack and setup. Let me know if you need further adjustments!

@@ -4,15 +4,8 @@ import { TasksModule } from './tasks/task.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(TasksModule);
-  // Enable global validation
-  // app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true, // Automatically transform payloads to DTO instances
-      whitelist: true, // Strip non-whitelisted properties
-      forbidNonWhitelisted: true, // Throw errors for non-whitelisted properties
-    }),
-  );
+  app.useGlobalPipes(new ValidationPipe());
+
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.enableCors({
@@ -20,6 +13,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(
